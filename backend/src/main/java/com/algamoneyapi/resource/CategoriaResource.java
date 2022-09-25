@@ -39,8 +39,8 @@ public class CategoriaResource {
     }
 
     @GetMapping("/{codigo}")
-    public ResponseEntity<Optional<Categoria>> buscaPorCodigo(@PathVariable Long codigo) {
+    public ResponseEntity<Optional<Categoria>> buscaPorCodigo(@PathVariable Long codigo) throws Exception {
         Optional<Categoria> categoriaEncontrada = repository.findById(codigo);
-        return ResponseEntity.ok().body(categoriaEncontrada);
+       return categoriaEncontrada == null ? ResponseEntity.ok(categoriaEncontrada) : ResponseEntity.notFound().build();
     }
 }
