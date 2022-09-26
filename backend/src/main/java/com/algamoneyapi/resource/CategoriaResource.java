@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class CategoriaResource {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Categoria> salvar(@RequestBody Categoria entidade, HttpServletResponse response) {
+    public ResponseEntity<Categoria> salvar(@Valid @RequestBody Categoria entidade, HttpServletResponse response) {
         Categoria categoriaSalva = repository.save(entidade);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequestUri().path("/{codigo}")
