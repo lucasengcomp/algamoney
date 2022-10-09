@@ -49,6 +49,10 @@ public class Pessoa {
         return endereco;
     }
 
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
