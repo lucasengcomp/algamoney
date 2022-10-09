@@ -14,7 +14,7 @@ public class Lancamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
-    private String descricacao;
+    private String descricao;
 
     @Column(name = "data_vencimento")
     private LocalDate dataVencimento;
@@ -43,12 +43,12 @@ public class Lancamento {
         this.codigo = codigo;
     }
 
-    public String getDescricacao() {
-        return descricacao;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setDescricacao(String descricacao) {
-        this.descricacao = descricacao;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public LocalDate getDataVencimento() {
