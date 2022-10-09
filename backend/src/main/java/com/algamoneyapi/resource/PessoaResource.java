@@ -42,4 +42,10 @@ public class PessoaResource {
     public Optional<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
         return pessoaRepository.findById(codigo);
     }
+
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long codigo) {
+        pessoaRepository.deleteById(codigo);
+    }
 }
