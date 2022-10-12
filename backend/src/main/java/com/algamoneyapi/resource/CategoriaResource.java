@@ -24,12 +24,12 @@ public class CategoriaResource {
     }
 
     @GetMapping("/{codigo}")
-    public Optional<Categoria> buscarPorCodigo(@PathVariable Long codigo) {
-        return service.buscaCategoriaPorCodigo(codigo);
+    public Categoria buscarPorCodigo(@PathVariable Long codigo) {
+        return service.buscarCategoriaPorCodigo(codigo);
     }
 
     @GetMapping
     public List<Categoria> listarTodasCategorias() {
-        return service.buscaTodasAsCategorias();
+        return service.listarTodasCategorias();
     }
 }
