@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+
 @Entity
 @Table(name = "lancamento")
 public class Lancamento {
@@ -20,6 +21,7 @@ public class Lancamento {
     private String descricao;
 
     @Column(name = "data_vencimento")
+    @NotNull
     private LocalDate dataVencimento;
 
     @Column(name = "data_pagamento")
@@ -30,18 +32,18 @@ public class Lancamento {
 
     private String observacao;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TipoLancamento tipo;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "codigo_categoria")
+    @NotNull
     private Categoria categoria;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "codigo_pessoa")
+    @NotNull
     private Pessoa pessoa;
 
     public Long getCodigo() {

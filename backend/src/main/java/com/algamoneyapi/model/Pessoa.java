@@ -1,5 +1,8 @@
 package com.algamoneyapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
@@ -8,6 +11,7 @@ import java.util.Objects;
 @Table(name = "pessoa")
 public class Pessoa {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
@@ -18,8 +22,13 @@ public class Pessoa {
     @Embedded
     private Endereco endereco;
 
-    @NotNull
-    private Boolean ativo;
+    private Boolean ativo = true;
+
+    @JsonIgnore
+    @Transient
+    public boolean isInativo() {
+        return !this.ativo;
+    }
 
     public Long getCodigo() {
         return codigo;

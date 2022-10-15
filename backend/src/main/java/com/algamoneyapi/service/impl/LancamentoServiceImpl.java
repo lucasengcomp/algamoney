@@ -1,14 +1,14 @@
 package com.algamoneyapi.service.impl;
 
 import com.algamoneyapi.event.RecursoCriadoEvent;
-import com.algamoneyapi.model.Categoria;
 import com.algamoneyapi.model.Lancamento;
+import com.algamoneyapi.model.Pessoa;
 import com.algamoneyapi.repository.LancamentoRepository;
+import com.algamoneyapi.repository.PessoaRepository;
 import com.algamoneyapi.service.LancamentoService;
+import com.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +20,9 @@ public class LancamentoServiceImpl implements LancamentoService {
 
     @Autowired
     private LancamentoRepository repository;
+
+    @Autowired
+    private PessoaRepository pessoaRepository;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -35,10 +38,15 @@ public class LancamentoServiceImpl implements LancamentoService {
     }
 
     @Override
-    public ResponseEntity<Lancamento> salvar(Lancamento lancamento, HttpServletResponse response) {
-        Lancamento lancamentoSalvo = repository.save(lancamento);
-        eventoLancamentoCriado(response, lancamentoSalvo);
-        return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
+    public Lancamento salvarLancamentoComPessoaAtiva(Lancamento lancamento) {
+        verificaSePessoaENulaOuInativa(pessoaRepository.findById(lancamento.getPessoa().getCodigo()));
+        return repository.save(lancamento);
+    }
+
+    private static void verificaSePessoaENulaOuInativa(Optional<Pessoa> pessoa) {
+        if (!pessoa.isPresent() || pessoa.get().isInativo()) {
+            throw new PessoaInexistenteOuInativaException();
+        }
     }
 
     private void eventoLancamentoCriado(HttpServletResponse response, Lancamento lancamento) {

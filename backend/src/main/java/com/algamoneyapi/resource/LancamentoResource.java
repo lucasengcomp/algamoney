@@ -1,17 +1,21 @@
 package com.algamoneyapi.resource;
 
 import com.algamoneyapi.event.RecursoCriadoEvent;
-import com.algamoneyapi.model.Categoria;
+import com.algamoneyapi.exceptions.MensagemCapturadaErro;
 import com.algamoneyapi.model.Lancamento;
 import com.algamoneyapi.service.LancamentoService;
+import com.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,18 +26,30 @@ public class LancamentoResource {
     @Autowired
     private LancamentoService service;
 
+    @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
+    private ApplicationEventPublisher publisher;
+
     @GetMapping("/{codigo}")
     public Optional<Lancamento> buscarPorCodigo(@PathVariable Long codigo) {
         return service.buscaCategoriaPorCodigo(codigo);
     }
 
     @GetMapping
-    public List<Lancamento> buscaTodos() {
+    public List<Lancamento> buscarTodos() {
         return service.buscaTodosLancamentosSemPaginacao();
     }
 
     @PostMapping
-    public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
-        return service.salvar(lancamento, response);
+    public ResponseEntity<Lancamento> salvarComPessoaStatusAtiva(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
+        Lancamento lancamentoSalvo = service.salvarLancamentoComPessoaAtiva(lancamento);
+        eventoParaValidarLancamentoCriado(response, lancamentoSalvo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
+    }
+
+    private void eventoParaValidarLancamentoCriado(HttpServletResponse response, Lancamento lancamentoSalvo) {
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getCodigo()));
     }
 }
