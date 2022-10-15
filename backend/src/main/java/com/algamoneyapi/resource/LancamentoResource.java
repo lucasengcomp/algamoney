@@ -1,21 +1,18 @@
 package com.algamoneyapi.resource;
 
 import com.algamoneyapi.event.RecursoCriadoEvent;
-import com.algamoneyapi.exceptions.MensagemCapturadaErro;
 import com.algamoneyapi.model.Lancamento;
+import com.algamoneyapi.repository.filter.LancamentoFilter;
 import com.algamoneyapi.service.LancamentoService;
-import com.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +35,7 @@ public class LancamentoResource {
     }
 
     @GetMapping
-    public List<Lancamento> buscarTodos() {
+    public List<Lancamento> pesquisar(LancamentoFilter filtroLancamento) {
         return service.buscaTodosLancamentosSemPaginacao();
     }
 
