@@ -9,6 +9,8 @@ import com.algamoneyapi.service.LancamentoService;
 import com.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +43,11 @@ public class LancamentoServiceImpl implements LancamentoService {
     public Lancamento salvarLancamentoComPessoaAtiva(Lancamento lancamento) {
         verificaSePessoaENulaOuInativa(pessoaRepository.findById(lancamento.getPessoa().getCodigo()));
         return repository.save(lancamento);
+    }
+
+    @Override
+    public void deletarLancamento(Long codigo) {
+        repository.deleteById(codigo);
     }
 
     private static void verificaSePessoaENulaOuInativa(Optional<Pessoa> pessoa) {

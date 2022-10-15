@@ -46,6 +46,12 @@ public class LancamentoResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
     }
 
+    @DeleteMapping("/{codigo}")
+    public ResponseEntity<Lancamento> remover(@PathVariable Long codigo) {
+        service.deletarLancamento(codigo);
+        return ResponseEntity.noContent().build();
+    }
+
     private void eventoParaValidarLancamentoCriado(HttpServletResponse response, Lancamento lancamentoSalvo) {
         publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getCodigo()));
     }
