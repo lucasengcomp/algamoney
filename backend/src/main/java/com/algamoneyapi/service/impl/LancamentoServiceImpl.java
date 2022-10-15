@@ -5,16 +5,16 @@ import com.algamoneyapi.model.Lancamento;
 import com.algamoneyapi.model.Pessoa;
 import com.algamoneyapi.repository.LancamentoRepository;
 import com.algamoneyapi.repository.PessoaRepository;
+import com.algamoneyapi.repository.filter.LancamentoFilter;
 import com.algamoneyapi.service.LancamentoService;
 import com.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,8 +35,8 @@ public class LancamentoServiceImpl implements LancamentoService {
     }
 
     @Override
-    public List<Lancamento> buscaTodosLancamentosSemPaginacao() {
-        return repository.findAll();
+    public Page<Lancamento> buscaPaginada(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return repository.filtrar(lancamentoFilter, pageable);
     }
 
     @Override
